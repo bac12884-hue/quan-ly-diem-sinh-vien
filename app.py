@@ -1,11 +1,8 @@
 Python
 import streamlit as st
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg') # Thêm dòng này để tránh xung đột giao diện đồ họa trên server
-import matplotlib.pyplot as plt
 
-# --- DỮ LIỆU & XỬ LÝ (Giữ nguyên phần đầu của bạn) ---
+# 1. Tạo dữ liệu
 data = {
     'Họ và tên': ['An', 'Bình', 'Chi', 'Dũng', 'Hà', 'Lan', 'Minh', 'Nam', 'Phúc', 'Trang'],
     'Chuyên cần': [8, 9, 7, 6, 10, 8, 9, 7, 8, 9],
@@ -13,8 +10,11 @@ data = {
     'Cuối kỳ': [8, 8.5, 7, 6.5, 9, 8, 8, 7, 8.5, 9]
 }
 df = pd.DataFrame(data)
+
+# 2. Tính điểm tổng kết
 df['Tong_ket'] = 0.2 * df['Chuyên cần'] + 0.3 * df['Giữa kỳ'] + 0.5 * df['Cuối kỳ']
 
+# 3. Xếp loại sinh viên
 def xep_loai(dtk):
     if dtk >= 8.5: return 'Giỏi'
     elif dtk >= 7.0: return 'Khá'
@@ -23,7 +23,7 @@ def xep_loai(dtk):
 
 df['Xep_loai'] = df['Tong_ket'].apply(xep_loai)
 
-# --- GIAO DIỆN STREAMLIT ---
+# 4. Giao diện Web App Streamlit
 st.title("QUẢN LÝ ĐIỂM SINH VIÊN")
 
 st.subheader("📋 Bảng điểm chi tiết của 10 sinh viên")
@@ -56,14 +56,10 @@ st.info(f"""
 * **Xếp loại:** {student_info['Xep_loai']}
 """)
 
+# 5. Biểu đồ thay thế bằng st.bar_chart (Ổn định tuyệt đối trên Streamlit)
 st.subheader("📈 Biểu đồ điểm tổng kết của 10 sinh viên")
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.bar(df['Họ và tên'], df['Tong_ket'], color='skyblue')
-ax.set_xlabel("Họ và tên sinh viên")
-ax.set_ylabel("Điểm tổng kết")
-ax.set_title("Biểu đồ điểm tổng kết của sinh viên")
-ax.set_ylim(0, 10)
-st.pyplot(fig)
+chart_data = df.set_index('Họ và tên')[['Tong_ket']]
+st.bar_chart(chart_data)
 
 st.markdown("---")
 st.markdown("<p style='text-align: center; color: gray; font-size: small;'>Người tạo ứng dụng: [Họ tên của bạn] - [MSSV]</p>", unsafe_allow_html=True)

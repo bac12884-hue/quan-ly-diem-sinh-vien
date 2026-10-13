@@ -66,4 +66,4 @@ ax.set_ylim(0, 10)
 st.pyplot(fig)
 
 st.markdown("---")
-st.markdown("<p style='text-align: center;")
+st.markdown("<p style='text-align: center; color: gray; font-size: small;'>Người tạo ứng dụng: [Họ tên của bạn] - [MSSV]</p>", unsafe_allow_html=True)
